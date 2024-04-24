@@ -19,18 +19,29 @@ function CargarTarjetas() {
                 nuevaTarjeta.classList.add("mb-3");
                 nuevaTarjeta.classList.add("mr-3"); // Agrega un margen a la derecha
                 nuevaTarjeta.style.width = "18rem"; // Define el ancho de la tarjeta si es necesario
-                nuevaTarjeta.innerHTML = `
+
+                let cardContent = `
                     <div class="card-body">
-                        <h5 class="card-title">${carro.marca} ${carro.modelo}</h5>
+                        <h5 class="card-title">${carro.marca} ${carro.modelo ? carro.modelo : ''}</h5>
                         <p class="card-text"><strong>Número de serie:</strong> ${carro.numSerie}</p>
-                        <p class="card-text"><strong>Fecha de creación:</strong> ${carro.fechaCreacion}</p>
-                        <p class="card-text"><strong>Tanque de gasolina:</strong> ${carro.tanqueGasolina}</p>
                         <p class="card-text"><strong>Equipo de audio:</strong> ${carro.equipoAudio ? 'Sí' : 'No'}</p>
-                        <button class="btn btn-primary" onclick="mostrarDetalle(${carro.numSerie}, '${carro.marca}', '${carro.modelo}', '${carro.fechaCreacion}', ${carro.tanqueGasolina}, ${carro.equipoAudio})">Editar</button>
+                `;
+
+                // Agregar etiquetas de campos opcionales si están presentes
+                if (carro.fechaCreacion) {
+                    cardContent += `<p class="card-text"><strong>Fecha de creación:</strong> ${carro.fechaCreacion}</p>`;
+                }
+                if (carro.tanqueGasolina) {
+                    cardContent += `<p class="card-text"><strong>Tanque de gasolina:</strong> ${carro.tanqueGasolina}</p>`;
+                }
+
+                cardContent += `
+                        <button class="btn btn-primary" onclick="mostrarDetalle(${carro.numSerie}, '${carro.marca}', '${carro.modelo ? carro.modelo : ''}', '${carro.fechaCreacion}', ${carro.tanqueGasolina}, ${carro.equipoAudio})">Editar</button>
                         <button class="btn btn-danger" onclick="eliminarCarro(${carro.numSerie})">Eliminar</button>
                     </div>
                 `;
 
+                nuevaTarjeta.innerHTML = cardContent;
                 contenedorTarjetas.appendChild(nuevaTarjeta);
             });
         })
@@ -38,6 +49,7 @@ function CargarTarjetas() {
             console.error("Error al cargar las tarjetas: " + error);
         });
 }
+
 
 
 
@@ -75,22 +87,42 @@ function eliminarCarro(numSerie) {
 
 function insertar() {
     let ruta = "http://localhost:8080/Proyecto_Mongo/api/carro/insertar";
+
+    // Obtener los valores de los campos
     let v_numSerie = parseInt(document.getElementById("txtNumSerie").value.trim());
     let v_marca = document.getElementById("txtMarca").value.trim();
-    let v_modelo = document.getElementById("txtModelo").value.trim();
-    let v_fechaCreacion = document.getElementById("txtFechaCreacion").value.trim();
-    let v_tanqueGasolina = parseFloat(document.getElementById("txtTanqueGasolina").value.trim());
     let v_equipoAudio = document.getElementById("txtEquipoAudio").value.trim();
 
+    // Validar campos obligatorios
+    if (!v_numSerie || !v_marca || !v_equipoAudio) {
+        alert("Por favor complete todos los campos obligatorios: Número de serie, Marca y Equipo de audio.");
+        return; // Detener el proceso si algún campo obligatorio está vacío
+    }
+
+    // Crear un objeto carro con los campos obligatorios
     let carro = {
         numSerie: v_numSerie,
         marca: v_marca,
-        modelo: v_modelo,
-        fechaCreacion: v_fechaCreacion,
-        tanqueGasolina: v_tanqueGasolina,
         equipoAudio: v_equipoAudio
     };
 
+    // Obtener los valores de los campos opcionales
+    let v_modelo = document.getElementById("txtModelo").value.trim();
+    let v_fechaCreacion = document.getElementById("txtFechaCreacion").value.trim();
+    let v_tanqueGasolina = parseFloat(document.getElementById("txtTanqueGasolina").value.trim());
+
+    // Agregar los campos opcionales si tienen valor
+    if (v_modelo !== "") {
+        carro.modelo = v_modelo;
+    }
+    if (v_fechaCreacion !== "") {
+        carro.fechaCreacion = v_fechaCreacion;
+    }
+    if (!isNaN(v_tanqueGasolina)) {
+        carro.tanqueGasolina = v_tanqueGasolina;
+    }
+
+    // Enviar la solicitud al servidor
     const requestOptions = {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -115,23 +147,43 @@ function insertar() {
             });
 }
 
+
 function actualizarCarro() {
     let ruta = "http://localhost:8080/Proyecto_Mongo/api/carro/actualizar";
+    
+    // Obtener los valores de los campos
     let v_numSerie = parseInt(document.getElementById("txtNumSerie").value.trim());
     let v_marca = document.getElementById("txtMarca").value.trim();
-    let v_modelo = document.getElementById("txtModelo").value.trim();
-    let v_fechaCreacion = document.getElementById("txtFechaCreacion").value.trim();
-    let v_tanqueGasolina = parseFloat(document.getElementById("txtTanqueGasolina").value.trim());
     let v_equipoAudio = document.getElementById("txtEquipoAudio").value.trim();
 
+    // Validar campos obligatorios
+    if (!v_numSerie || !v_marca || !v_equipoAudio) {
+        alert("Por favor complete todos los campos obligatorios: Número de serie, Marca y Equipo de audio.");
+        return; // Detener el proceso si algún campo obligatorio está vacío
+    }
+
+    // Crear un objeto carro con los campos obligatorios
     let carro = {
         numSerie: v_numSerie,
         marca: v_marca,
-        modelo: v_modelo,
-        fechaCreacion: v_fechaCreacion,
-        tanqueGasolina: v_tanqueGasolina,
         equipoAudio: v_equipoAudio
     };
+
+    // Obtener los valores de los campos opcionales
+    let v_modelo = document.getElementById("txtModelo").value.trim();
+    let v_fechaCreacion = document.getElementById("txtFechaCreacion").value.trim();
+    let v_tanqueGasolina = parseFloat(document.getElementById("txtTanqueGasolina").value.trim());
+
+    // Agregar los campos opcionales si tienen valor
+    if (v_modelo) {
+        carro.modelo = v_modelo;
+    }
+    if (v_fechaCreacion) {
+        carro.fechaCreacion = v_fechaCreacion;
+    }
+    if (!isNaN(v_tanqueGasolina)) {
+        carro.tanqueGasolina = v_tanqueGasolina;
+    }
 
     const requestOptions = {
         method: 'PUT',
@@ -155,6 +207,7 @@ function actualizarCarro() {
             console.error("Error al actualizar: " + error);
         });
 }
+
 
 
 function clean() {
