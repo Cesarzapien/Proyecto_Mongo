@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Carros</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4">
+            <h2 class="text-center mb-4">Gestión de Carros</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="txtNumSerie">Numero de serie:</label>
+                        <input type="text" id="txtNumSerie" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="txtMarca">Marca:</label>
+                        <input type="text" id="txtMarca" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="txtModelo">Modelo:</label>
+                        <input type="text" id="txtModelo" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="txtFechaCreacion">Fecha de Creación:</label>
+                        <input type="date" id="txtFechaCreacion" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="txtTanqueGasolina">Capacidad del Tanque:</label>
+                        <input type="text" id="txtTanqueGasolina" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="txtEquipoAudio">¿Trae equipo de audio?</label>
+                        <select id="txtEquipoAudio" class="form-control">
+                            <option value="true">Sí</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button class="btn btn-primary mr-2" onclick="insertar();">Registrar</button>
+                <button class="btn btn-secondary" onclick="Cargartabla();">Consultar</button>
+                <button class="btn btn-secondary" onclick="clean();">Limpiar</button>
+                <button class="btn btn-secondary" onclick="actualizarCarro();">Actualizar</button>
+            </div>
+        </div>
+    </div><br>
+    
+            <h2 class="text-center mb-4">Listado de Carros</h2>
+            <div id="contenedor-tarjetas" class="row" >
+                <!-- Aquí se cargarán las tarjetas de los carros -->
+            </div>
+
+    <script src="JS/Dragonborn.js"></script>
+</body>
+</html>
